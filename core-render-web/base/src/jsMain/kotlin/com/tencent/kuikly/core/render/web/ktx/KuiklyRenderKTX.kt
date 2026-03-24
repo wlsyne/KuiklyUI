@@ -179,7 +179,15 @@ internal fun List<Any>.toJSONArray(): JSONArray {
 }
 
 
-fun Any.toPxF(): String = toString() + "px"
+fun Any.toPxF(): String {
+    val adapter = KuiklyRenderAdapterManager.krUnitAdapter ?: return toString() + "px"
+    val floatValue = when (this) {
+        is Number -> toFloat()
+        is String -> toFloatOrNull() ?: 0f
+        else -> toString().toFloatOrNull() ?: 0f
+    }
+    return adapter.toUnit(floatValue)
+}
 
 fun Any.toNumberFloat(): Float = (this as Number).toFloat()
 
